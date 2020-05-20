@@ -9,31 +9,9 @@
 			"name": "it should POST register a user",
 			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"id": "7c935e96-0d61-4a33-a1cf-5733d3396fd9",
-						"exec": [
-							"console.log(JSON.parse(pm.response.text()));\r",
-							"let x = JSON.parse(pm.response.text());\r",
-							"console.log(x.token);\r",
-							"pm.environment.set(\"newuserid\", x._id);\r",
-							"\r",
-							"pm.test(\"response is ok\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.environment.set(\"useremail\", x.email);\r",
-							"pm.environment.set(\"iduser\", x._id);\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c764225e-3d43-4360-9105-8f0827b329cb",
+						"id": "d093b756-0d2a-4125-8933-c7047f04771e",
 						"exec": [
 							"\r",
 							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
@@ -41,9 +19,34 @@
 							"const newemail = \"use\" + uuid + \"@goodone.com\";\r",
 							"pm.environment.set(\"newemail\", newemail);\r",
 							"\r",
+							"let emaill = \"programmer@programmer.com\";\r",
 							"\r",
-							"const password = \"password\" + uuid ;\r",
+							"pm.environment.set(\"emaill\", emaill);\r",
+							"let password = \"password\" + uuid;\r",
 							"pm.environment.set(\"password\", password);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ca96f74-0df5-40bd-9992-a1216f19f46e",
+						"exec": [
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
+							"pm.environment.set(\"token\", x.token);\r",
+							"\r",
+							"pm.test(\"response is ok\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"useremail\", x.email);\r",
+							"pm.environment.set(\"iduser\", x._id);\r",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -72,7 +75,7 @@
 						},
 						{
 							"key": "email",
-							"value": "programmer@programmer.com",
+							"value": "{{emaill}}",
 							"type": "text"
 						},
 						{
@@ -128,9 +131,19 @@
 			"name": "it should GET token (profile)",
 			"event": [
 				{
+					"listen": "prerequest",
+					"script": {
+						"id": "856c8657-7e0e-4a1c-9e67-e443b2098ab4",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
 					"listen": "test",
 					"script": {
-						"id": "9edad937-c1e4-4eae-8fee-62735dbbeee3",
+						"id": "f50460cb-dfc2-4c42-9837-7ff2ff09a3ee",
 						"exec": [
 							"console.log(JSON.parse(pm.response.text()));\r",
 							"let x = JSON.parse(pm.response.text());\r",
@@ -145,19 +158,6 @@
 							"\r",
 							"\r",
 							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "00d91c26-fae0-4a28-93ff-5452c832262a",
-						"exec": [
-							"const uuid = Math.random().toString(36).substring(2, 7) +\r",
-							"    Math.random().toString(36).substring(2, 7);\r",
-							"const newemail = \"password\" + uuid ;\r",
-							"pm.environment.set(\"password\", password);"
 						],
 						"type": "text/javascript"
 					}
@@ -181,12 +181,12 @@
 					"urlencoded": [
 						{
 							"key": "email",
-							"value": "programmer@programmer.com",
+							"value": "{{emaill}}",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "1234567",
+							"value": "{{password}}",
 							"type": "text"
 						}
 					]
@@ -327,7 +327,7 @@
 							"\r",
 							"\r",
 							"pm.test(\"response is ok\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.status(422);\r",
 							"});\r",
 							"\r",
 							""
@@ -496,7 +496,7 @@
 							"\r",
 							"\r",
 							"pm.test(\"response is ok\", function () {\r",
-							"    pm.response.to.have.status(401);\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							""
@@ -528,7 +528,7 @@
 						},
 						{
 							"key": "email",
-							"value": "programmer@programmer.com",
+							"value": "programmer@programmerrr.com",
 							"type": "text"
 						},
 						{
@@ -676,6 +676,24 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c38e9f03-bf00-413a-88dc-7a8ac7030b19",
+						"exec": [
+							"const uuid = Math.random().toString(32).substring(2, 7) +\r",
+							"        Math.random().toString(32).substring(2, 7);\r",
+							"\r",
+							"let oldPassword = pm.environment.get(\"password\");\r",
+							"\r",
+							"const password = \"new\" + \"pass\" + uuid;\r",
+							"\r",
+							"pm.environment.set(\"oldPassword\", oldPassword);\r",
+							"pm.environment.set(\"password\", password);"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
@@ -725,27 +743,24 @@
 							"disabled": true
 						},
 						{
-							"key": "country",
-							"value": "Colombia",
-							"type": "text",
-							"disabled": true
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
 						},
 						{
 							"key": "oldPassword",
-							"value": "12345",
-							"type": "text",
-							"disabled": true
+							"value": "somebadpassword",
+							"type": "text"
 						},
 						{
 							"key": "newPassword",
-							"value": "1234567",
-							"type": "text",
-							"disabled": true
+							"value": "{{password}}",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword?email=user@user.com&oldPassword=12453&newPassword=476568798",
+					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword",
 					"protocol": "https",
 					"host": [
 						"api-demo",
@@ -759,15 +774,18 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "user@user.com"
+							"value": "user@user.com",
+							"disabled": true
 						},
 						{
 							"key": "oldPassword",
-							"value": "12453"
+							"value": "12453",
+							"disabled": true
 						},
 						{
 							"key": "newPassword",
-							"value": "476568798"
+							"value": "476568798",
+							"disabled": true
 						}
 					]
 				},
@@ -842,27 +860,24 @@
 							"disabled": true
 						},
 						{
-							"key": "country",
-							"value": "Colombia",
-							"type": "text",
-							"disabled": true
+							"key": "email",
+							"value": "{{emaill}}",
+							"type": "text"
 						},
 						{
 							"key": "oldPassword",
-							"value": "12345",
-							"type": "text",
-							"disabled": true
+							"value": "{{oldPassword}}",
+							"type": "text"
 						},
 						{
 							"key": "newPassword",
-							"value": "1234567",
-							"type": "text",
-							"disabled": true
+							"value": "123",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword?email=user@user.com&oldPassword=12345&newPassword=4765",
+					"raw": "https://api-demo.daniel-avellaneda.com/profile/changePassword",
 					"protocol": "https",
 					"host": [
 						"api-demo",
@@ -876,15 +891,18 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "user@user.com"
+							"value": "programmer@programmer.com",
+							"disabled": true
 						},
 						{
 							"key": "oldPassword",
-							"value": "12345"
+							"value": "1234",
+							"disabled": true
 						},
 						{
 							"key": "newPassword",
-							"value": "4765"
+							"value": "{{password}}",
+							"disabled": true
 						}
 					]
 				},
@@ -898,13 +916,17 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "e902b079-2ee6-4703-989e-a2be160f9952",
+						"id": "fb860065-5c58-41ad-994f-a380ae93dfb3",
 						"exec": [
 							"\r",
 							"\r",
 							"pm.test(\"response is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
+							"\r",
+							"console.log(JSON.parse(pm.response.text()));\r",
+							"let x = JSON.parse(pm.response.text());\r",
+							"console.log(x.token);\r",
 							"\r",
 							""
 						],
@@ -966,17 +988,17 @@
 						},
 						{
 							"key": "oldPassword",
-							"value": "12324324324",
+							"value": "{{oldPassword}}",
 							"type": "text"
 						},
 						{
 							"key": "newPassword",
-							"value": "1234567",
+							"value": "{{password}}",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "programmer@programmer.com",
+							"value": "{{emaill}}",
 							"type": "text"
 						}
 					]
